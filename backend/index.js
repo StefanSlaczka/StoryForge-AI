@@ -11,11 +11,14 @@ app.post('/api/check-answer', (req, res) => {
   const userAnswer = parseInt(req.body.answer, 10);
   const correctAnswer = 4;
 
-  if (userAnswer === correctAnswer) {
-    res.json({ message: '✅ Correct!' });
-  } else {
-    res.json({ message: `❌ Incorrect. The answer is ${correctAnswer}.` });
-  }
+  const isCorrect = userAnswer === correctAnswer;
+
+  res.json({
+    message: isCorrect
+      ? '✅ Correct!'
+      : `❌ Incorrect. The answer is ${correctAnswer}.`,
+    isCorrect: isCorrect
+  });
 });
 
 app.listen(PORT, () => {
