@@ -29,11 +29,13 @@ const willYouSayYes = {
 };
 
 function analyzeInput(inputText) {
-  const cleanedInput = inputText.trim().toUpperCase();
+  const words = inputText.trim().toUpperCase().split(/\s+/);
+  const yesWords = ["YES", "SURE", "OK", "YEAH", "YEP"];
+  const noWords = ["NO", "NAH", "NOPE"];
 
-  if (["YES", "SURE", "OK", "YEAH", "YEP"].includes(cleanedInput)) {
+  if (words.some(word => yesWords.includes(word))) {
     willYouSayYes.changeState("YES");
-  } else if (["NO", "NAH", "NOPE"].includes(cleanedInput)) {
+  } else if (words.some(word => noWords.includes(word))) {
     willYouSayYes.changeState("NO");
   } else {
     console.log("Sorry, I didn't understand that.");
