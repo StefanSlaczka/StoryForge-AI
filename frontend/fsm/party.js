@@ -1,3 +1,5 @@
+import { createInterface } from "readline";
+
 const willYouSayYes = {
   state: "NO",
   changeState(newState) {
@@ -26,7 +28,6 @@ const willYouSayYes = {
   }
 };
 
-// Analyze input text and set proper state
 function analyzeInput(inputText) {
   const cleanedInput = inputText.trim().toUpperCase();
 
@@ -39,27 +40,13 @@ function analyzeInput(inputText) {
   }
 }
 
-// Test
+const rl = createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 
-analyzeInput("yes");
-willYouSayYes.act("whatAreWeGoingToDo");
-
-console.log("\n");
-
-analyzeInput("sure");
-willYouSayYes.act("whatAreWeGoingToDo");
-
-console.log("\n");
-
-analyzeInput("ok");
-willYouSayYes.act("whatAreWeGoingToDo");
-
-console.log("\n");
-
-analyzeInput("no");
-willYouSayYes.act("whatAreWeGoingToDo");
-
-console.log("\n");
-
-analyzeInput("huh?");
-willYouSayYes.act("whatAreWeGoingToDo");
+rl.question("Hey Stef, want to go to the party? (yes/no): ", function (answer) {
+  analyzeInput(answer);
+  willYouSayYes.act("whatAreWeGoingToDo");
+  rl.close();
+});
