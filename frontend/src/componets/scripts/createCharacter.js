@@ -24,3 +24,40 @@
     }
 */
 
+export class AICharacter {
+  constructor({
+    name = "",
+    eyes = "",
+    hair = "",
+    ethnicity = "",
+    race = "",
+    personality = "",
+    typeOfPerson = "",
+    favoriteThings = [],
+    environment = {}
+  } = {}) {
+    this.name = name;
+    this.eyes = eyes;
+    this.hair = hair;
+    this.ethnicity = ethnicity;
+    this.race = race;
+    this.personality = personality;
+    this.typeOfPerson = typeOfPerson;
+    this.favoriteThings = favoriteThings;
+    this.environment = {
+      setting: environment.setting || "",
+      event: environment.event || ""
+    };
+  }
+
+  setEnvironment(setting, event) {
+    this.environment.setting = setting;
+    this.environment.event = event;
+  }
+
+  describe() {
+    return `${this.name} is a ${this.personality} ${this.typeOfPerson} with ${this.hair} hair and ${this.eyes} eyes. 
+They are currently in ${this.environment.setting} where ${this.environment.event}.`;
+  }
+}
+

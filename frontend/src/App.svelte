@@ -1,6 +1,6 @@
 <script>
   import Character from './componets/character.svelte';
-  import creatingPage from './componets/creatingPage.svelte';
+  import CreatingPage  from './componets/creatingPage.svelte';
 
   let currentTab = 'character';
 </script>
@@ -13,7 +13,7 @@
 {#if currentTab === 'character'}
   <Character />
 {:else if currentTab === 'empty'}
-  <creatingPage />
+  <CreatingPage  />
 {/if}
 
 <style>
