@@ -10,27 +10,38 @@
     chatLog = [{ from: 'bot', text: intro }];
   });
 
-  function handleSubmit() {
-    const botResponse = fsm.handleInput(userInput);
+   function handleSubmit() {
+    const recognized = fsm.analyzeInput(userInput);
+    const botResponses = fsm.act("whatAreWeGoingToDo");
+
     chatLog = [
       ...chatLog,
       { from: 'user', text: userInput },
-      { from: 'bot', text: botResponse }
+      ...botResponses.map(text => ({ from: 'bot', text }))
     ];
+
+    if (!recognized) {
+      chatLog = [...chatLog, { from: 'bot', text: "Sorry, I didn't understand that." }];
+    }
+
     userInput = '';
   }
 </script>
 
 <main>
   <h1>Chat with PartyBot</h1>
-  
+
   <div class="chat-box">
     {#each chatLog as msg}
       <p><strong>{msg.from}:</strong> {msg.text}</p>
     {/each}
   </div>
-  
-  <input bind:value={userInput} placeholder="Say something..." on:keydown={(e) => e.key === 'Enter' && handleSubmit()} />
+
+  <input
+    bind:value={userInput}
+    placeholder="Say something..."
+    on:keydown={(e) => e.key === 'Enter' && handleSubmit()}
+  />
   <button on:click={handleSubmit}>Send</button>
 </main>
 

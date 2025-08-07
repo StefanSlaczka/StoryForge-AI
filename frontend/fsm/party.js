@@ -1,24 +1,49 @@
-// fsm.js (inside /frontend/fsm/)
+// party.js
 export const fsm = {
-  state: "start",
+  state: "NO",
+
+  transitions: {
+    NO: {
+      whatAreWeGoingToDo() {
+        return [
+          "That's a bummer. See you later. Text me if you change your mind."
+        ];
+      }
+    },
+    YES: {
+      whatAreWeGoingToDo() {
+        return [
+          "Great! We're going to have so much fun!"
+        ];
+      }
+    }
+  },
+
   changeState(newState) {
     this.state = newState;
   },
-  handleInput(input) {
-    const normalizedInput = input.trim().toLowerCase();
 
-    if (this.state === "start") {
-      if (["yes", "y"].includes(normalizedInput)) {
-        this.changeState("yes");
-        return "Awesome! Let's go!";
-      } else if (["no", "n"].includes(normalizedInput)) {
-        this.changeState("no");
-        return "That's a bummer. See you later. Text me if you change your mind.";
-      } else {
-        return "Sorry, I didn't understand that.";
-      }
+  act(actionName) {
+    const current = this.transitions[this.state];
+    if (current && typeof current[actionName] === "function") {
+      return current[actionName](); // returns an array of bot lines
+    } else {
+      return [`Action "${actionName}" is not valid in state "${this.state}".`];
     }
+  },
 
-    return "Conversation ended.";
+  analyzeInput(inputText) {
+    const words = inputText.trim().toUpperCase().split(/\s+/);
+    const yesWords = ["YES", "SURE", "OK", "YEAH", "YEP"];
+    const noWords = ["NO", "NAH", "NOPE"];
+
+    if (words.some(word => yesWords.includes(word))) {
+      this.changeState("YES");
+      return true;
+    } else if (words.some(word => noWords.includes(word))) {
+      this.changeState("NO");
+      return true;
+    }
+    return false;
   }
 };
