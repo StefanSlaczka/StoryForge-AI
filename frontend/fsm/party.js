@@ -1,20 +1,20 @@
-// party.js
 export const fsm = {
-  state: "NO",
+  state: "start",
 
   transitions: {
+    start: {
+      whatAreWeGoingToDo() {
+        return ["Hey user, want to go to the party?"];
+      }
+    },
     NO: {
       whatAreWeGoingToDo() {
-        return [
-          "That's a bummer. See you later. Text me if you change your mind."
-        ];
+        return ["That's a bummer. See you later. Text me if you change your mind."];
       }
     },
     YES: {
       whatAreWeGoingToDo() {
-        return [
-          "Great! We're going to have so much fun!"
-        ];
+        return ["Great! We're going to have so much fun!"];
       }
     }
   },
@@ -26,7 +26,7 @@ export const fsm = {
   act(actionName) {
     const current = this.transitions[this.state];
     if (current && typeof current[actionName] === "function") {
-      return current[actionName](); // returns an array of bot lines
+      return current[actionName]();
     } else {
       return [`Action "${actionName}" is not valid in state "${this.state}".`];
     }

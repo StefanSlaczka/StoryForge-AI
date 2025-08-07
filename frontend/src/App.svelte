@@ -12,22 +12,18 @@
     chatLog = [{ from: 'bot', text: intro }];
   });
 
-   function handleSubmit() {
+  function handleSubmit() {
     const recognized = fsm.analyzeInput(userInput);
     const botResponses = fsm.act("whatAreWeGoingToDo");
 
-    chatLog = [
-      ...chatLog,
-      { from: 'user', text: userInput },
-      ...botResponses.map(text => ({ from: 'bot', text }))
-    ];
+  chatLog = [
+    ...chatLog,
+    { from: 'user', text: userInput },
+    ...botResponses.map(text => ({ from: 'bot', text }))
+  ];
 
-    if (!recognized) {
-      chatLog = [...chatLog, { from: 'bot', text: "Sorry, I didn't understand that." }];
-    }
-
-    userInput = '';
-  }
+  userInput = '';
+}
   // Auto-scroll after chatLog updates
   afterUpdate(() => {
     if (chatBoxRef) {
