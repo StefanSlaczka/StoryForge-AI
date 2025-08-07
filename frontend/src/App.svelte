@@ -1,9 +1,11 @@
 <script>
   import { fsm } from '../fsm/party';
-  import { mount, onMount } from 'svelte';
+  import { onMount, afterUpdate } from 'svelte';
 
   let userInput = '';
   let chatLog = [];
+  let chatBoxRef;
+
   const intro = "Hey user, want to go to the party?";
 
   onMount(() => {
@@ -26,12 +28,18 @@
 
     userInput = '';
   }
+  // Auto-scroll after chatLog updates
+  afterUpdate(() => {
+    if (chatBoxRef) {
+      chatBoxRef.scrollTop = chatBoxRef.scrollHeight;
+    }
+  });
 </script>
 
 <main>
   <h1>Chat with PartyBot</h1>
 
-  <div class="chat-box">
+  <div class="chat-box" bind:this={chatBoxRef}>
     {#each chatLog as msg}
       <p><strong>{msg.from}:</strong> {msg.text}</p>
     {/each}
