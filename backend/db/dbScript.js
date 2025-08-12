@@ -1,0 +1,17 @@
+/*
+        id,
+        name,
+        age,
+        gender,
+        eyes,
+        hair,
+        ethnicity,
+        race,
+        personality_traits, 
+        archetype,          
+        favorite_things,    
+        speaking_style,     
+        location,           
+        current_event,    
+        background_story,  
+*/
