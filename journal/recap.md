@@ -9,3 +9,11 @@ Four days in, I have:
 * Build a UI for the application
 
 Overall, I think this is great progress for just four days in.
+
+**8-18-2025**
+
+Update I have had somthing personal things to do so i didn't finsh week2.md
+
+Classes has started and now I will be on and off but will try to do a couple things a day.
+
+Overall, I think this is great progress for just four days in.
