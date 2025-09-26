@@ -1,28 +1,32 @@
 <script>
-  import { fsm } from '../../fsm/party';
+  import { PartyFSM } from '../../fsm/party-fsm';
+  import { ChatBot } from '../lib/chatBot';
   import { onMount, afterUpdate } from 'svelte';
 
   let userInput = '';
   let chatLog = [];
   let chatBoxRef;
-
-  const intro = "Hey user, want to go to the party?";
+  let chatBot;
 
   onMount(() => {
-    chatLog = [{ from: 'bot', text: intro }];
+    const fsm = new PartyFSM(); // create fms
+    chatBot = new ChatBot(fsm); // makes chat bot with fsm
+    chatLog = chatBot.initialize(); // starting conversation
   });
 
-  function handleSubmit() {
-    const recognized = fsm.analyzeInput(userInput);
-    const botResponses = fsm.act("whatAreWeGoingToDo");
+  async function handleSubmit() {
+    if (!userInput.trim()) return; // doesn't send empty messages
+    
+    const newChatLog = await chatBot.processUserInput(userInput);
+    chatLog = newChatLog; // update UI with the new conversatuon
+    userInput = ''; // clears input
+  }
 
-    chatLog = [
-      ...chatLog,
-      { from: 'user', text: userInput },
-      ...botResponses.map(text => ({ from: 'bot', text }))
-    ];
-
-    userInput = '';
+  function handleKeyPress(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
   }
 
   afterUpdate(() => {
@@ -37,24 +41,37 @@
 
   <div class="chat-box" bind:this={chatBoxRef}>
     {#each chatLog as msg}
-      <p><strong>{msg.from}:</strong> {msg.text}</p>
+      <div class="message {msg.from}">
+        <strong>{msg.from}:</strong> {msg.text}
+      </div>
     {/each}
   </div>
 
-  <input
-    bind:value={userInput}
-    placeholder="Say something..."
-    on:keydown={(e) => e.key === 'Enter' && handleSubmit()}
-  />
-  <button on:click={handleSubmit}>Send</button>
+  <div class="input-area">
+    <input
+      bind:value={userInput}
+      placeholder="Say something..."
+      on:keydown={handleKeyPress}
+      disabled={chatBot?.isProcessing}
+    />
+    <button on:click={handleSubmit} disabled={chatBot?.isProcessing}>
+      {chatBot?.isProcessing ? 'Processing...' : 'Send'}
+    </button>
+  </div>
+
+  <button on:click={() => {
+    chatLog = chatBot.clearChat();
+  }}>Reset Chat</button>
 </main>
 
 <style>
-  .chat-box {
-    border: 1px solid #ccc;
-    padding: 1rem;
-    height: 300px;
-    overflow-y: scroll;
-    margin-bottom: 1rem;
+  .message.user { color: blue; }
+  .message.bot { color: green; }
+  .chat-box { 
+    height: 300px; 
+    overflow-y: auto; 
+    border: 1px solid #ccc; 
+    padding: 10px;
+    margin: 10px 0;
   }
 </style>
